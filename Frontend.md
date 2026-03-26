@@ -1,4 +1,4 @@
-### React States
+## React States
 
 #### Built-in States
 
@@ -11,7 +11,7 @@
 2. React Query/Tanstack Query
 
 
-### React Hooks
+## React Hooks
 
 #### Helps to store and update state
 #### Run side effects (useEffect)
@@ -27,7 +27,7 @@
 8. useEffectLayout => When Ui is having issues. it runs after the DOM has been mutated in the browsers.
 
 
-### Zustand
+## Zustand
 
 A light and fast global state management, which can read and write from anywhere from the project. similar to shared google docs.
 
@@ -85,3 +85,29 @@ const useStore = create((...a) => ({
   ...createCounterSlice(...a),
   ...createUserSlice(...a),
 }));
+
+
+## Middleware
+
+Middleware allows to run the code before any request is completed. For example, if the user try to login then we can check if the user is valid or not or if the token is there in cookies(browser). we can rewrite, redirect or set headers and cookies. which can be used for authentication, i18n, testing, security. we can give similar to dependencies in useEffect if the matcher match the condition then middleware will run the condition.
+
+#### For Example
+
+// middleware.ts
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
+
+export function middleware(request: NextRequest) {
+  const token = request.cookies.get('token')?.value;
+
+  if (request.nextUrl.pathname.startsWith('/protected') && !token) {
+    return NextResponse.redirect(new URL('/login', request.url));
+  }
+
+  return NextResponse.next();
+}
+
+// Optionally, define a matcher to run the middleware only on specific paths
+export const config = {
+  matcher: ['/protected/:path*'],
+};
